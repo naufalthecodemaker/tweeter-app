@@ -147,3 +147,37 @@ export async function createCommentAction(postId: string, formData: FormData) {
     return { error: error.message || "Failed to create comment" };
   }
 }
+
+export async function deleteCommentAction(commentId: string, postId: string) {
+  try {
+    // cuma user yg udh login yg bisa komen
+    const user = await getCurrentUser();
+    if (!user) {
+      return { error: "You must be logged in to delete a comment" };
+    }
+
+    const [comment] = await db
+      .select()
+      .from(comments)
+      .where(eq(comments.id, commentId))
+      .limit(1);
+
+    if (!comment) {
+      return { error: "Comment not found" };
+    }
+
+    if (comment.userId !== user.userId) {
+      return { error: "You can only delete your own comments" };
+    }
+
+    await db.delete(comments).where(eq(comments.id, commentId));
+
+    revalidatePath("/");
+    revalidatePath(`/post/${postId}`);
+
+    return { success: true, message: "Comment deleted successfully!" };
+  } catch (error: any) {
+    console.error("Delete comment error:", error);
+    return { error: error.message || "Failed to delete comment" };
+  }
+}

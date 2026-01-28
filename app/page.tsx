@@ -15,9 +15,9 @@ export default async function HomePage() {
   // cek siapa user yg lagi login buat nyesuain tampilan UInya
   const currentUser = await getCurrentUser();
 
-  // ngambil semua data post dari neon db
-  const allPosts = await db
-    .select({
+  // gw optimasi dgn narik semua data (posts, likes, comments) barengan biar gakena timeout
+  const [allPosts, postLikes, postComments] = await Promise.all([
+    db.select({
       id: posts.id,
       content: posts.content,
       createdAt: posts.createdAt,
@@ -26,12 +26,12 @@ export default async function HomePage() {
       authorDisplayName: users.displayName,
     })
     .from(posts)
-    .leftJoin(users, eq(posts.userId, users.id)) // join ke tabel user biar dapet nama authornya
-    .orderBy(desc(posts.createdAt)); // urutin dari post paling baru 
-
-  // narik data likes ama komen buat dihitung 
-  const postLikes = await db.select().from(likes);
-  const postComments = await db.select().from(comments);
+    .leftJoin(users, eq(posts.userId, users.id))
+    .orderBy(desc(posts.createdAt)),
+    
+    db.select().from(likes),
+    db.select().from(comments)
+  ]);
 
   // gabungin data post ama likes & komen yang udah difilter sesuai id postnya
   const postsWithDetails = allPosts.map((post) => ({
@@ -52,7 +52,7 @@ export default async function HomePage() {
       <div className="container mx-auto px-4 py-8 max-w-2xl">
         <div className="space-y-8">
           
-          {/* user udh login ato blm */}
+          {/* Section Welcome: cek user udh login ato blm */}
           {currentUser ? (
             <div className="animate-fade-in text-center space-y-6 py-12">
               <h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent leading-tight px-4">
@@ -62,7 +62,7 @@ export default async function HomePage() {
                 What's happening today?
               </p>
               <LoadingLink href="/create">
-                <Button size="lg" className="mt-6 shadow-lg hover:shadow-2xl">
+                <Button size="lg" className="mt-6 shadow-lg hover:shadow-2xl transition-all duration-300">
                   <PenSquare className="h-5 w-5 mr-2" />
                   Create New Post
                 </Button>
@@ -88,7 +88,7 @@ export default async function HomePage() {
           )}
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between px-1">
+            <div className="flex items-center justify-between px-1 border-b border-white/10 pb-4">
               <h2 className="text-2xl font-bold">Recent Posts</h2>
               <p className="text-sm text-muted-foreground">{postsWithDetails.length} posts</p>
             </div>
@@ -99,7 +99,7 @@ export default async function HomePage() {
                 <p className="text-sm mt-2">Be the first to share something!</p>
               </div>
             ) : (
-              // looping semua postingan yg ada
+              // looping semua postingan yg ada dgn efek delay per item
               postsWithDetails.map((post, index) => (
                 <div
                   key={post.id}
