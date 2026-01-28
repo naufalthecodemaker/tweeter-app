@@ -10,7 +10,7 @@ export async function Navbar() {
   const user = await getCurrentUser();
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/10 bg-background/60 backdrop-blur-xl shadow-lg">
+    <nav className="sticky top-0 z-50 border-b border-white/10 bg-background/60 backdrop-blur-md md:backdrop-blur-xl shadow-lg transition-all">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <LoadingLink href="/" className="flex items-center space-x-3 group">

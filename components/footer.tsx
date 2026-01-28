@@ -3,8 +3,8 @@ import { Rocket, Github, Code2 } from "lucide-react";
 export function Footer() {
   return (
     <footer className="relative mt-auto border-t border-white/20 dark:border-white/10 overflow-hidden">
-      {/* Background Glassmorphism */}
-      <div className="absolute inset-0 bg-white/10 dark:bg-black/20 -z-10 backdrop-blur-[30px] dark:backdrop-blur-[40px] saturate-[150%]" />
+      {/* blur dikurangin di hp biar scroll footer ga ngelag */}
+      <div className="absolute inset-0 bg-white/10 dark:bg-black/20 -z-10 backdrop-blur-md md:backdrop-blur-[40px] saturate-[120%] md:saturate-[150%] will-change-transform" />
       
       <div className="container mx-auto px-4 py-10 relative z-10">
         <div className="flex flex-col items-center justify-center space-y-8 text-center">

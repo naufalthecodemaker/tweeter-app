@@ -6,31 +6,39 @@ import { useEffect, useState } from "react";
 export function BackgroundEffects() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // pastiin komponen ini cuma jalan di browser 
   useEffect(() => {
     setMounted(true);
+    
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   if (!mounted) return null;
 
-  // logic buat nentuin pake light/dark mode
   const isDark = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
 
   return (
     <>
-      {/* ganti suasana background tergantung tema yg dipilih user */}
-      {isDark ? <DarkModeEffects /> : <LightModeEffects />}
+      {isDark ? <DarkModeEffects isMobile={isMobile} /> : <LightModeEffects isMobile={isMobile} />}
     </>
   );
 }
 
-function DarkModeEffects() {
+function DarkModeEffects({ isMobile }: { isMobile: boolean }) {
+  const starCount = isMobile ? 30 : 100;
+  const shootingStarCount = isMobile ? 2 : 5;
+
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-      {/* background bintang */}
       <div className="stars-container">
-        {[...Array(100)].map((_, i) => (
+        {[...Array(starCount)].map((_, i) => (
           <div
             key={`star-${i}`}
             className="star"
@@ -44,9 +52,8 @@ function DarkModeEffects() {
         ))}
       </div>
 
-      {/* bintang jatuh*/}
       <div className="shooting-stars-container">
-        {[...Array(5)].map((_, i) => (
+        {[...Array(shootingStarCount)].map((_, i) => (
           <div
             key={`shooting-star-${i}`}
             className="shooting-star"
@@ -59,7 +66,6 @@ function DarkModeEffects() {
         ))}
       </div>
 
-      {/* planet*/}
       <div className="planet planet-1">
         <div className="absolute rounded-full bg-purple-900/40" style={{ width: '15px', height: '15px', top: '20%', left: '25%' }} />
         <div className="absolute rounded-full bg-purple-900/40" style={{ width: '10px', height: '10px', top: '60%', left: '50%' }} />
@@ -77,31 +83,28 @@ function DarkModeEffects() {
         <div className="absolute rounded-full bg-cyan-900/40" style={{ width: '8px', height: '8px', top: '50%', right: '30%' }} />
       </div>
 
-      {/* gradasi overlay*/}
       <div className="galaxy-gradient" />
     </div>
   );
 }
 
-function LightModeEffects() {
+function LightModeEffects({ isMobile }: { isMobile: boolean }) {
+  const sparkleCount = isMobile ? 5 : 15;
+
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-      {/* background langit cerah */}
       <div className="absolute inset-0 bg-gradient-to-b from-blue-50 via-purple-50 to-pink-50" />
       
-      {/* matahari */}
       <div className="sun" />
       <div className="sun-rays" />
       
-      {/* awan*/}
       <div className="cloud cloud-1" />
       <div className="cloud cloud-2" />
       <div className="cloud cloud-3" />
       <div className="cloud cloud-4" />
       
-      {/* sparkles */}
       <div className="sparkles-container">
-        {[...Array(15)].map((_, i) => (
+        {[...Array(sparkleCount)].map((_, i) => (
           <div
             key={`sparkle-${i}`}
             className="sparkle"

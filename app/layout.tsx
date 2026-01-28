@@ -23,19 +23,13 @@ export const metadata: Metadata = {
   description: "A modern Twitter-like social media platform built with Next.js",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${dmSans.variable} font-sans antialiased`}>
+      <body className={`${dmSans.variable} font-sans antialiased selection:bg-primary/30`}>
         <ThemeProvider defaultTheme="system" storageKey="socialhub-theme">
           <LoadingProvider>
             <ToastProvider />
-
-            {/* suspense utk handle useSearchParams di dalam LoadingOverlay */}
             <Suspense fallback={null}>
               <LoadingOverlay />
             </Suspense>
@@ -43,7 +37,7 @@ export default function RootLayout({
             <BackgroundEffects />
             <Navbar />
 
-            <main className="min-h-screen relative flex flex-col">
+            <main className="min-h-screen relative flex flex-col isolation-isolate">
               <div className="flex-grow">
                 {children}
               </div>
