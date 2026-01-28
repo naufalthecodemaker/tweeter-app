@@ -1,0 +1,550 @@
+@import "tailwindcss";
+
+@theme {
+  /* warna di light mode */
+  --color-background: #faf8ff;
+  --color-foreground: #1a1625;
+  --color-card: #ffffff;
+  --color-card-foreground: #1a1625;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #1a1625;
+  --color-primary: #7c3aed;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f3e8ff;
+  --color-secondary-foreground: #4c1d95;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-muted: #f3e8ff;
+  --color-muted-foreground: #6b7280;
+  --color-accent: #e9d5ff;
+  --color-accent-foreground: #4c1d95;
+  --color-border: #e9d5ff;
+  --color-input: #e9d5ff;
+  --color-ring: #7c3aed;
+  --radius: 0.75rem;
+}
+
+/* warna di dark mode */
+@variant dark (&:where(.dark, .dark *));
+
+.dark {
+  --color-background: #0a0118;
+  --color-foreground: #f5f3ff;
+  --color-card: #1a0f2e;
+  --color-card-foreground: #f5f3ff;
+  --color-popover: #1a0f2e;
+  --color-popover-foreground: #f5f3ff;
+  --color-primary: #a78bfa;
+  --color-primary-foreground: #1a0f2e;
+  --color-secondary: #2d1b4e;
+  --color-secondary-foreground: #f5f3ff;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #f5f3ff;
+  --color-muted: #2d1b4e;
+  --color-muted-foreground: #c4b5fd;
+  --color-accent: #3b2667;
+  --color-accent-foreground: #f5f3ff;
+  --color-border: #3b2667;
+  --color-input: #2d1b4e;
+  --color-ring: #a78bfa;
+}
+
+/* --- base styles --- */
+@layer base {
+  * {
+    border-color: var(--color-border);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+
+  body {
+    font-feature-settings: "rlig" 1, "calt" 1;
+    @apply bg-background text-foreground;
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+}
+
+/* --- animasi ama efek --- */
+@layer utilities {
+  /* efek di dark mode */
+  .stars-container {
+    @apply absolute w-full h-full;
+  }
+
+  .star {
+    @apply absolute rounded-full bg-white;
+    width: 2px;
+    height: 2px;
+    animation: twinkle 3s infinite;
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+  }
+
+  .shooting-star {
+    @apply absolute rounded-full bg-white;
+    width: 2px;
+    height: 2px;
+    animation: shoot-diagonal 3s linear infinite;
+    box-shadow: 0 0 4px 2px rgba(255, 255, 255, 0.5);
+  }
+
+  .shooting-star::before {
+    content: '';
+    @apply absolute top-0 left-0;
+    width: 100px; 
+    height: 1px;
+    background: linear-gradient(-90deg, white, transparent);
+    transform: rotate(45deg); 
+    transform-origin: left;
+  }
+
+  .planet {
+    @apply absolute rounded-full;
+    animation: float 20s infinite ease-in-out;
+  }
+
+  .planet-1 {
+    width: 120px;
+    height: 120px;
+    top: 10%;
+    right: 10%;
+    background: radial-gradient(circle at 30% 30%, #a78bfa, #7c3aed);
+    box-shadow: 
+      0 0 60px rgba(167, 139, 250, 0.6),
+      0 0 100px rgba(124, 58, 237, 0.4),
+      inset 0 0 30px rgba(167, 139, 250, 0.3);
+    animation-delay: 0s;
+  }
+
+  .planet-2 {
+    width: 80px;
+    height: 80px;
+    bottom: 20%;
+    left: 15%;
+    background: radial-gradient(circle at 30% 30%, #ec4899, #be185d);
+    box-shadow: 
+      0 0 50px rgba(236, 72, 153, 0.6),
+      0 0 80px rgba(190, 24, 93, 0.4),
+      inset 0 0 25px rgba(236, 72, 153, 0.3);
+    animation-delay: -7s;
+  }
+
+  .planet-3 {
+    width: 60px;
+    height: 60px;
+    top: 60%;
+    right: 20%;
+    background: radial-gradient(circle at 30% 30%, #06b6d4, #0891b2);
+    box-shadow: 
+      0 0 40px rgba(6, 182, 212, 0.6),
+      0 0 70px rgba(8, 145, 178, 0.4),
+      inset 0 0 20px rgba(6, 182, 212, 0.3);
+    animation-delay: -14s;
+  }
+
+  .galaxy-gradient {
+    @apply absolute w-full h-full;
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      rgba(124, 58, 237, 0.1) 0%,
+      transparent 50%
+    );
+    animation: pulse 10s infinite;
+  }
+
+  /* buat light mode */
+  .sun {
+    @apply absolute rounded-full;
+    top: 5%;
+    right: 10%;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, #fbbf24, #f59e0b);
+    box-shadow: 0 0 60px rgba(251, 191, 36, 0.6);
+    animation: sun-pulse 4s infinite ease-in-out;
+  }
+
+  .sun-rays {
+    @apply absolute;
+    top: 5%;
+    right: 10%;
+    width: 100px;
+    height: 100px;
+    animation: sun-rotate 20s linear infinite;
+  }
+
+  .sun-rays::before,
+  .sun-rays::after {
+    content: '';
+    @apply absolute;
+    top: 50%;
+    left: 50%;
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.4), transparent);
+    transform: translate(-50%, -50%);
+  }
+
+  .sun-rays::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .cloud {
+    @apply absolute;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 100px;
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
+    animation: cloud-float 30s infinite ease-in-out;
+  }
+
+  .cloud::before,
+  .cloud::after {
+    content: '';
+    @apply absolute;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 100px;
+  }
+
+  .cloud-1 {
+    width: 120px;
+    height: 40px;
+    top: 15%;
+    left: 10%;
+    animation-duration: 35s;
+  }
+
+  .cloud-1::before {
+    width: 50px;
+    height: 50px;
+    top: -25px;
+    left: 20px;
+  }
+
+  .cloud-1::after {
+    width: 60px;
+    height: 30px;
+    top: -15px;
+    right: 20px;
+  }
+
+  .cloud-2 {
+    width: 100px;
+    height: 35px;
+    top: 25%;
+    right: 15%;
+    animation-duration: 40s;
+    animation-delay: -10s;
+  }
+
+  .cloud-2::before {
+    width: 45px;
+    height: 45px;
+    top: -20px;
+    left: 15px;
+  }
+
+  .cloud-2::after {
+    width: 50px;
+    height: 25px;
+    top: -12px;
+    right: 15px;
+  }
+
+  .cloud-3 {
+    width: 140px;
+    height: 45px;
+    bottom: 20%;
+    left: 20%;
+    animation-duration: 45s;
+    animation-delay: -20s;
+  }
+
+  .cloud-3::before {
+    width: 60px;
+    height: 60px;
+    top: -30px;
+    left: 25px;
+  }
+
+  .cloud-3::after {
+    width: 70px;
+    height: 35px;
+    top: -18px;
+    right: 25px;
+  }
+
+  .cloud-4 {
+    width: 90px;
+    height: 30px;
+    bottom: 30%;
+    right: 25%;
+    animation-duration: 38s;
+    animation-delay: -15s;
+  }
+
+  .cloud-4::before {
+    width: 40px;
+    height: 40px;
+    top: -18px;
+    left: 12px;
+  }
+
+  .cloud-4::after {
+    width: 45px;
+    height: 22px;
+    top: -10px;
+    right: 12px;
+  }
+
+  .sparkles-container {
+    @apply absolute w-full h-full;
+  }
+
+  .sparkle {
+    @apply absolute;
+    width: 6px;
+    height: 6px;
+    background: linear-gradient(45deg, #fbbf24, #f59e0b);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    animation: sparkle-twinkle 2s infinite ease-in-out;
+  }
+
+  /* state hover */
+  .hover\:shadow-lg:hover {
+    box-shadow: 0 10px 40px rgba(124, 58, 237, 0.15);
+  }
+
+  .dark .hover\:shadow-lg:hover {
+    box-shadow: 0 10px 40px rgba(167, 139, 250, 0.2);
+  }
+}
+
+button,
+a,
+[role="button"],
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* efek biar cardnya jdi glow pas dihover */
+.hover\:shadow-lg:hover {
+  box-shadow: 
+    0 10px 40px rgba(124, 58, 237, 0.25),
+    0 0 20px rgba(124, 58, 237, 0.15),
+    inset 0 0 1px rgba(124, 58, 237, 0.1);
+  transform: translateY(-2px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .hover\:shadow-lg:hover {
+  box-shadow: 
+    0 10px 40px rgba(167, 139, 250, 0.3),
+    0 0 30px rgba(167, 139, 250, 0.2),
+    inset 0 0 1px rgba(167, 139, 250, 0.15);
+  border-color: rgba(167, 139, 250, 0.5);
+}
+
+/* button hover glow */
+button:hover:not(:disabled),
+.button-hover:hover {
+  box-shadow: 
+    0 4px 20px rgba(124, 58, 237, 0.4),
+    0 0 15px rgba(124, 58, 237, 0.3);
+  transform: translateY(-1px);
+}
+
+.dark button:hover:not(:disabled),
+.dark .button-hover:hover {
+  box-shadow: 
+    0 4px 20px rgba(167, 139, 250, 0.5),
+    0 0 20px rgba(167, 139, 250, 0.4);
+}
+
+/* primary button specific glow */
+button[class*="bg-primary"]:hover:not(:disabled) {
+  box-shadow: 
+    0 4px 20px rgba(124, 58, 237, 0.6),
+    0 0 25px rgba(124, 58, 237, 0.4),
+    inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.dark button[class*="bg-primary"]:hover:not(:disabled) {
+  box-shadow: 
+    0 4px 20px rgba(167, 139, 250, 0.7),
+    0 0 30px rgba(167, 139, 250, 0.5),
+    inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* link hover glow */
+a:hover {
+  text-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
+  transition: all 0.2s ease;
+}
+
+.dark a:hover {
+  text-shadow: 0 0 12px rgba(167, 139, 250, 0.6);
+}
+
+/* avatar hover glow */
+.hover-avatar:hover {
+  box-shadow: 
+    0 0 20px rgba(124, 58, 237, 0.5),
+    inset 0 0 10px rgba(124, 58, 237, 0.2);
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+}
+
+.dark .hover-avatar:hover {
+  box-shadow: 
+    0 0 25px rgba(167, 139, 250, 0.6),
+    inset 0 0 15px rgba(167, 139, 250, 0.3);
+}
+
+/* input focus glow */
+input:focus,
+textarea:focus {
+  box-shadow: 
+    0 0 0 2px rgba(124, 58, 237, 0.2),
+    0 0 20px rgba(124, 58, 237, 0.3);
+  border-color: rgba(124, 58, 237, 0.5);
+}
+
+.dark input:focus,
+.dark textarea:focus {
+  box-shadow: 
+    0 0 0 2px rgba(167, 139, 250, 0.3),
+    0 0 25px rgba(167, 139, 250, 0.4);
+  border-color: rgba(167, 139, 250, 0.6);
+}
+
+/* biar iconnya pas dihover bisa glow */
+svg:hover,
+.icon-hover:hover svg {
+  filter: drop-shadow(0 0 8px rgba(124, 58, 237, 0.6));
+  transform: scale(1.1);
+  transition: all 0.2s ease;
+}
+
+.dark svg:hover,
+.dark .icon-hover:hover svg {
+  filter: drop-shadow(0 0 12px rgba(167, 139, 250, 0.7));
+}
+
+/* navbar hover */
+nav button:hover,
+nav a:hover {
+  background: rgba(124, 58, 237, 0.1);
+  box-shadow: 
+    0 0 15px rgba(124, 58, 237, 0.2),
+    inset 0 0 10px rgba(124, 58, 237, 0.05);
+}
+
+.dark nav button:hover,
+.dark nav a:hover {
+  background: rgba(167, 139, 250, 0.15);
+  box-shadow: 
+    0 0 20px rgba(167, 139, 250, 0.3),
+    inset 0 0 15px rgba(167, 139, 250, 0.1);
+}
+
+/* disable state*/
+button:disabled,
+button:disabled:hover {
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+  opacity: 0.5;
+}
+
+/* biar transisinya alus */
+button,
+a,
+input,
+textarea,
+[class*="card"],
+[class*="avatar"] {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes shoot {
+  0% { transform: translateX(0) translateY(0); opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: translateX(-300px) translateY(300px); opacity: 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(5deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* buat light mode  */
+@keyframes sun-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes sun-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes cloud-float {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  25% { transform: translateX(20px) translateY(-10px); }
+  50% { transform: translateX(0) translateY(-20px); }
+  75% { transform: translateX(-20px) translateY(-10px); }
+}
+
+@keyframes sparkle-twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.8) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+}
+
+@keyframes shoot-diagonal {
+  0% {
+    transform: translate(-100px, -100px);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(600px, 600px);
+    opacity: 0;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-10px);
+    opacity: 0.5;
+  }
+}
+
+/* Helper class for animations */
+.animate-bounce {
+  animation: bounce 0.6s infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
