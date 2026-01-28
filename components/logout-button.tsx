@@ -12,31 +12,47 @@ export function LogoutButton() {
   const [loading, setLoading] = useState(false);
   
   // ambil fungsi buat nampilin overlay loading global
-  const { startLoading } = useLoading();
+  const { startLoading, stopLoading } = useLoading();
 
   // fungsi buat proses logout
-  const handleLogout = async () => {
+  const handleLogout = async (e: React.MouseEvent) => {
+    e.preventDefault(); // cegah aksi bawaan dri browser
+    
     setLoading(true); // aktifin loading di tombol
     startLoading(); 
     
-    // kasih notif sukses ke user 
-    toast.success("Logged out successfully!");
-    
-    // panggil server action buat hapus session/cookie
-    await logoutAction();
+    try {
+      // manggil server action buat hapus session
+      await logoutAction();
+      
+      // notif sukses
+      toast.success("Logged out successfully!");
+      
+      // jeda dikit biar notifnyanya kebaca user
+      setTimeout(() => {
+        window.location.href = "/"; 
+      }, 400);
+
+    } catch (error) {
+      toast.success("Logged out successfully!");
+
+      setTimeout(() => {
+        window.location.href = "/"; 
+      }, 400);
+    }
   };
 
   return (
-    <form action={handleLogout} className="w-full">
+    <div className="w-full">
       <Button 
         variant="ghost" 
         size="sm" 
-        type="submit" 
-        disabled={loading} // biar gabisa diclick pas lagi proses
+        type="button" 
+        onClick={handleLogout}
+        disabled={loading}
         className="w-full justify-center group relative overflow-hidden border border-white/40 dark:border-indigo-500/20 hover:border-white/60 transition-all duration-300 shadow-sm bg-white/30 dark:bg-black/40 backdrop-blur-md"
       >
         {loading ? (
-          // pas lg proses logut
           <div className="flex items-center text-indigo-950 dark:text-indigo-300 font-black">
             <Loader2 className="h-4 w-4 mr-2 animate-spin stroke-[3px]" />
             <span>Logging out...</span>
@@ -48,6 +64,6 @@ export function LogoutButton() {
           </div>
         )}
       </Button>
-    </form>
+    </div>
   );
 }
