@@ -27,7 +27,7 @@ export function Footer() {
           {/* Section 2: GitHub & WhatsApp (Original Logos) */}
           <div className="flex items-center gap-6">
             <a 
-              href="https://github.com/naufal-rahman" 
+              href="https://github.com/naufalthecodemaker/tweeter-app.git" 
               target="_blank" 
               className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 hover:bg-primary/20 hover:border-primary/50 transition-all group"
             >
@@ -40,7 +40,7 @@ export function Footer() {
               target="_blank" 
               className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 hover:bg-green-500/20 hover:border-green-500/50 transition-all group"
             >
-              {/* WhatsApp Original SVG Logo */}
+              {/* WhatsApp Original SVG Logo, ganemu iconnya yg cocok */}
               <svg 
                 viewBox="0 0 24 24" 
                 className="h-5 w-5 fill-indigo-950/70 dark:fill-white/70 group-hover:fill-green-500 transition-colors"
@@ -52,7 +52,7 @@ export function Footer() {
             </a>
           </div>
 
-          {/* Section 3: Copyright & Developed By (Style Lama) */}
+          {/* Section 3: Copyright & Developed By (Style Lama), gajadi bikin yg baru lg wkwkk */}
           <div className="flex flex-col items-center space-y-5">
             <div className="space-y-2 text-center">
               <p className="text-[10px] md:text-xs font-black text-indigo-950/50 dark:text-white/40 tracking-widest uppercase flex flex-wrap justify-center gap-2">
