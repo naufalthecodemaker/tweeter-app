@@ -2,18 +2,17 @@ import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/db";
 import { users, follows } from "@/db/schema";
 import { ne, eq } from "drizzle-orm";
-import { UserCard } from "@/components/user-card";
-import { Users } from "lucide-react";
-import { PageReadyWrapper } from "@/components/page-ready-wrapper";
+import { Users as UsersIcon } from "lucide-react";
+import { UsersList } from "./users-list";
 
-// data slalu fresh tiap diload
+// data user selalu fresh
 export const dynamic = "force-dynamic";
 
 export default async function UsersPage() {
-  // ambil data user yg lg login buat filter data nanti
+  // user yg lg login 
   const currentUser = await getCurrentUser();
 
-  // ngambil semua user dari neon db
+  // ambil semua data user dari db
   const allUsers = await db
     .select({
       id: users.id,
@@ -22,62 +21,44 @@ export default async function UsersPage() {
       bio: users.bio,
     })
     .from(users)
-    // filter -> klo lg login, jgn tampilin akun sendiri di daftar 
+    // klo lg login jgn tampilin akun sendiri di list 
     .where(currentUser ? ne(users.id, currentUser.userId) : undefined)
-    .orderBy(users.username); // urutin sesuai abjad username
+    .orderBy(users.username);
 
-  // siapin list id user yg udh kita follow
+  // siapa aja yg udh kita follow
   let followingList: string[] = [];
+  
   if (currentUser) {
+    // ambil data dari tabel follows buat tau siapa aja yg udah dapet follow dri kita
     const following = await db
       .select()
       .from(follows)
       .where(eq(follows.followerId, currentUser.userId));
     
-    // ambil ID targetnya biar gampang dicheck di UI
+    // ambil id user biar gampang dicek 
     followingList = following.map((f) => f.followingId);
   }
 
   return (
-    <PageReadyWrapper>
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="space-y-6">
-          <div className="flex items-center gap-3 animate-fade-in">
-            <Users className="h-8 w-8 text-primary" />
-            <div>
-              <h1 className="text-3xl font-bold">Discover Users</h1>
-              <p className="text-muted-foreground">
-                Connect with people in the community
-              </p>
-            </div>
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="space-y-6">
+        <div className="flex items-center gap-3 animate-fade-in">
+          <UsersIcon className="h-8 w-8 text-primary" />
+          <div>
+            <h1 className="text-3xl font-bold">Discover Users</h1>
+            <p className="text-muted-foreground">
+              Connect with people in the community
+            </p>
           </div>
-
-          {/* gaada user lain*/}
-          {allUsers.length === 0 ? (
-            <div className="bg-card border rounded-xl p-8 text-center text-muted-foreground animate-fade-in">
-              No other users yet.
-            </div>
-          ) : (
-            <div className="grid gap-4">
-              {/* mapping daftar user ke dalam komponen usercard */}
-              {allUsers.map((user, index) => (
-                <div
-                  key={user.id}
-                  className="animate-fade-in"
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
-                  <UserCard
-                    user={user}
-                    // check status follow buat nentuin tampilan tombol
-                    isFollowing={followingList.includes(user.id)}
-                    currentUserId={currentUser?.userId}
-                  />
-                </div>
-              ))}
-            </div>
-          )}
         </div>
+
+        {/* handle search ama tombol follow */}
+        <UsersList
+          users={allUsers}
+          followingList={followingList}
+          currentUserId={currentUser?.userId}
+        />
       </div>
-    </PageReadyWrapper>
+    </div>
   );
 }
